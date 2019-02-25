@@ -1,30 +1,31 @@
 #
-# Nginx Dockerfile
+# Each instruction in this file generates a new layer that gets pushed to your local image cache
 #
-# https://github.com/dockerfile/nginx
+ 
 #
-
-# Pull base image.
-FROM dockerfile/ubuntu
-
-# Install Nginx.
-RUN \
-  add-apt-repository -y ppa:nginx/stable && \
-  apt-get update && \
-  apt-get install -y nginx && \
-  rm -rf /var/lib/apt/lists/* && \
-  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
-  chown -R www-data:www-data /var/lib/nginx
-
-# Define mountable directories.
-VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
-
-# Define working directory.
-WORKDIR /etc/nginx
-
-# Define default command.
-CMD ["nginx"]
-
-# Expose ports.
+# Lines preceeded by # are regarded as comments and ignored
+#
+ 
+#
+# The line below states we will base our new image on the Latest Official Ubuntu 
+FROM ubuntu:latest
+ 
+#
+# Identify the maintainer of an image
+LABEL maintainer="myname@somecompany.com"
+ 
+#
+# Update the image to the latest packages
+RUN apt-get update && apt-get upgrade -y
+ 
+#
+# Install NGINX to test.
+RUN apt-get install nginx -y
+ 
+#
+# Expose port 80
 EXPOSE 80
-EXPOSE 443
+ 
+#
+# Last is the actual command to start up NGINX within our Container
+CMD ["nginx", "-g", "daemon off;"]
